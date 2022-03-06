@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 
 from sklearn.model_selection import train_test_split
 
@@ -15,8 +16,8 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 
 # Function to create the model
-def get_mlp_model(hiddenLayerOne, hiddenLayerTwo,
-	dropout, learnRate):
+def get_mlp_model(hiddenLayerOne = 5, hiddenLayerTwo = 5,
+	dropout = 0, learnRate = 0.01):
 	# initialize a sequential model
 	# input data
 	model = Sequential()
@@ -48,17 +49,23 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 print(len(X_train), 'train examples')
 print(len(X_test), 'test examples')
 
+X_train = X_train.to_numpy()
+y_train = y_train.to_numpy()
+X_test = X_test.to_numpy()
+y_test = y_test.to_numpy()
+
+
 # wrap our model into a scikit-learn compatible classifier
 print("[INFO] initializing model...")
 model = KerasClassifier(build_fn=get_mlp_model, verbose=0)
 
 # define a grid of the hyperparameter search space
-hiddenLayerOne = [16]
-hiddenLayerTwo = [4]
-learnRate = [1e-2]
-dropout = [0.3]
-batchSize = [16]
-epochs = [5]
+hiddenLayerOne = [16, 4]
+hiddenLayerTwo = [4, 3]
+learnRate = [1e-2, 1e-1]
+dropout = [0.3, 0.1]
+batchSize = [16, 10]
+epochs = [5, 6]
 
 # create a dictionary from the hyperparameter grid
 grid = dict(
