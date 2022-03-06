@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+from sklearn.model_selection import train_test_split
 
 # import the necessary packages
 import tensorflow as tf
@@ -37,12 +38,12 @@ hiddenLayerOne = [4, 8, 16]
 hiddenLayerTwo = [4, 8]
 learnRate = [1e-2, 1e-3, 1e-4]
 dropout = [0.3, 0.4, 0.5]
-batchSize = [4, 8, 16, 32]
-epochs = [50, 100]
+batchSize = [16,32]
+epochs = [5]
 
 # create a dictionary from the hyperparameter grid
 grid = dict(
-	columns = len(X_train.columns),
+	columns = [len(X_train.columns)],
 	hiddenLayerOne=hiddenLayerOne,
 	learnRate=learnRate,
 	hiddenLayerTwo=hiddenLayerTwo,
@@ -59,7 +60,7 @@ https://scikit-learn.org/stable/modules/model_evaluation.html#scoring-parameter
 '''
 print("[INFO] performing random search...")
 searcher = RandomizedSearchCV(estimator=model, n_jobs=-1, cv=3,
-	param_distributions=grid, scoring="neg_mean_squared_error")
+	param_distributions=grid, scoring="neg_mean_squared_error", verbose = 1)
 searchResults = searcher.fit(X_train, y_train)
 
 # summarize grid search information
