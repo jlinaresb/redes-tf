@@ -54,11 +54,11 @@ print("[INFO] initializing model...")
 model = KerasClassifier(build_fn=get_mlp_model, verbose=0)
 
 # define a grid of the hyperparameter search space
-hiddenLayerOne = [4, 8, 16]
-hiddenLayerTwo = [4, 8]
-learnRate = [1e-2, 1e-3, 1e-4]
-dropout = [0.3, 0.4, 0.5]
-batchSize = [16,32]
+hiddenLayerOne = [16]
+hiddenLayerTwo = [4]
+learnRate = [1e-2]
+dropout = [0.3]
+batchSize = [16]
 epochs = [5]
 
 # create a dictionary from the hyperparameter grid
