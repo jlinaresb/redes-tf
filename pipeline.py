@@ -1,7 +1,7 @@
-# Use scikit-learn to grid search the batch size and epochs
+import os
+
 import numpy as np
 import pandas as pd
-
 
 import tensorflow as tf
 from tensorboard.plugins.hparams import api as hp
@@ -12,106 +12,80 @@ from sklearn.model_selection import train_test_split
 
 from matplotlib import pyplot as plt
 
+# working directory to input data
+os.chdir('/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/')
 
 # load dataset
-trainSet = pd.read_csv('audit_data.csv')
+data = pd.read_csv('example.csv', index_col = 1)
 
-# Feature generation: training data MAKE BETTER FEATURE TRANSFORMATIONS
-trainSet["output"] = trainSet['Audit_Risk']
-data = trainSet.drop(columns=['Audit_Risk', 'Detection_Risk'])
+# check if 'target' variable is present
+if 'target' in data.columns:
+    pass
+else:
+    ValueError("DataFrame must contain target variable!")
 
-data.drop(data.loc[(data.LOCATION_ID  == 'LOHARU')].index, inplace = True)
-data.drop(data.loc[(data.LOCATION_ID  == 'NUH')].index, inplace = True)
-data.drop(data.loc[(data.LOCATION_ID  == 'SAFIDON')].index, inplace = True)
-data["LOCATION_ID"] = pd.to_numeric(data.LOCATION_ID)
+# check that all variables are float
 
+# check if NA´s
+data.isna()
+data.isna().any()
+data.isna().sum()
+
+# remove NA´s
 data = data.dropna(axis = 0)
 
 # Train/test split
-train, test = train_test_split(data, test_size=0.2)
-train, val = train_test_split(train, test_size=0.25)
-print(len(train), 'train examples')
-print(len(val), 'validation examples')
-print(len(test), 'test examples')
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.33, random_state=42)
+
+X = data.drop('target', axis = 1)
+y = data.target
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+X_train, X_val, y_train, y_val = train_test_split(X_train, y_train, test_size=0.25)
+print(len(X_train), 'train examples')
+print(len(X_val), 'validation examples')
+print(len(X_test), 'test examples')
+
+# X, Y
 
 
-# A utility method to create a tf.data dataset from a Pandas Dataframe
-def df_to_dataset(dataframe, shuffle=True, batch_size=32):
-  dataframe = dataframe.copy()
-  labels = dataframe.pop('output')
-  ds = tf.data.Dataset.from_tensor_slices((dict(dataframe), labels))
-  if shuffle:
-    ds = ds.shuffle(buffer_size=len(dataframe))
-  ds = ds.batch(batch_size)
-  return ds
 
-train_ds = df_to_dataset(train)
-val_ds = df_to_dataset(val)
-test_ds = df_to_dataset(test)
+# HYPERPARAMETER TUNING
+# check this: https://analyticsindiamag.com/parameter-tuning-tensorboard/
+# ======== 
 
-# Scale
-def get_scal(feature):
-  def minmax(x):
-    mini = train[feature].min()
-    maxi = train[feature].max()
-    return (x - mini)/(maxi-mini)
-  return(minmax)
-
-# Scale DEPENDING OF KIND OF FEATURE, for feature coding see: https://medium.com/ml-book/demonstration-of-tensorflow-feature-columns-tf-feature-column-3bfcca4ca5c4
-
-#Numericals
-num_c = ['Sector_score', 'PARA_A', 'Score_A', 'Risk_A', 'PARA_B',
-       'Score_B', 'Risk_B', 'TOTAL', 'numbers', 'Score_B.1', 'Risk_C',
-       'Money_Value', 'Score_MV', 'Risk_D', 'District_Loss', 'PROB', 'RiSk_E',
-       'History', 'Prob', 'Risk_F', 'Score', 'Inherent_Risk','CONTROL_RISK']
-bucket_c = ['LOCATION_ID']
-
-#Categorical
-cat_i_c = ["Risk"]
-
-# Numerical columns
-feature_columns = []
-for header in num_c:
-  scal_input_fn = get_scal(header)
-  feature_columns.append(feature_column.numeric_column(header, normalizer_fn=scal_input_fn))
-
-# Bucketized columns
-LOCATION_ID = feature_column.numeric_column("LOCATION_ID")
-LOCATION_buckets = feature_column.bucketized_column(LOCATION_ID, boundaries=[5, 10, 15, 20, 25, 30, 35, 40, 45])
-feature_columns.append(LOCATION_buckets)
-
-# Categorical indicator columns
-for feature_name in cat_i_c:
-  vocabulary = data[feature_name].unique()
-  cat_c = tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary)
-  one_hot = feature_column.indicator_column(cat_c)
-  feature_columns.append(one_hot)
-
-# Categorical embedding columns 
-#for feature_name in cat_e_c:
-#  vocabulary = data[feature_name].unique()
-#  cat_c = tf.feature_column.categorical_column_with_vocabulary_list(feature_name, vocabulary)
-#  embeding = feature_column.embedding_column(cat_c, dimension=50)
-#  feature_columns.append(embeding)
-
-# Crossed columns
-#vocabulary = data['Sex'].unique()
-#Sex = tf.feature_column.categorical_column_with_vocabulary_list('Sex', vocabulary)
-
-#crossed_feature = feature_column.crossed_column([age_buckets, Sex], hash_bucket_size=1000)
-#crossed_feature = feature_column.indicator_column(crossed_feature)
-#feature_columns.append(crossed_feature)
-#len(feature_columns)
-
-# SET UP FOR HYPERPARAMETERS, this code is explained here for regression: https://analyticsindiamag.com/parameter-tuning-tensorboard/
+# layers
+'''
+Only two layers
+'''
 HP_NUM_UNITS1 = hp.HParam('num_units 1', hp.Discrete([4,8,16])) 
 HP_NUM_UNITS2 = hp.HParam('num_units 2', hp.Discrete([4,8]))
+
+# Dropout percentaje
+'''
+Remove conexions between neurons
+'''
 HP_DROPOUT = hp.HParam('dropout', hp.RealInterval(0.2, 0.5))
+
+# Optimizer
+'''
+Check diferent optimizer functions
+SGD: stochastic gradient descent
+Adam: popular extension to stochastic gradient descent
+RMSprop: ???
+'''
 HP_OPTIMIZER = hp.HParam('optimizer', hp.Discrete(['SGD', 'Adam', 'RMSprop']))
+
+# Learning rate
 HP_OPTIMIZER_LR = hp.HParam('learning_rate', hp.Discrete([0.0001, 0.001, 0.1]))
+
+# Regularization
 HP_L2 = hp.HParam('l2 regularizer', hp.RealInterval(.001,.01))
-HP_ACTIVATION_LAYER = hp.HParam('activation_layers', hp.Discrete(['relu', 'sigmoid', 'tanh']))
-#Settinf the Metric to RMSE
+
+# Activation layer
+HP_ACTIVATION_LAYER = hp.HParam('activation_layers', hp.Discrete(['relu', 'tanh']))
+
+# Metric to evaluate the model
 METRIC_RMSE = 'RootMeanSquaredError'
 
 #Loop para tunear también la learning rate, también vale para tunear más el optimizador según cuál sea, tienes más info de **args y **kwars en TF :)
@@ -132,13 +106,11 @@ with tf.summary.create_file_writer('logs/hparam_tuning').as_default():
     metrics=[hp.Metric(METRIC_RMSE, display_name='RMSE')],
   )
 
-# Create feature layer
-feature_layer = tf.keras.layers.DenseFeatures(feature_columns)
-
 # Define model 
+# ======
 def train_test_model(hparams):
   model = tf.keras.Sequential([
-    feature_layer,
+    layer.Dense(len(train.columns) - 1, input_shape = len(train.columns) - 1, activation=hparams[HP_ACTIVATION_LAYER]),
     layers.Dense(hparams[HP_NUM_UNITS1], kernel_regularizer=tf.keras.regularizers.l2(hparams[HP_L2]), activation=hparams[HP_ACTIVATION_LAYER]),
     layers.Dropout(hparams[HP_DROPOUT]),
     layers.Dense(hparams[HP_NUM_UNITS2], kernel_regularizer=tf.keras.regularizers.l2(hparams[HP_L2]), activation=hparams[HP_ACTIVATION_LAYER]),
@@ -147,11 +119,11 @@ def train_test_model(hparams):
   model.compile(optimizer=optimizer,
                 loss='mean_squared_logarithmic_error',
                 metrics=['RootMeanSquaredError'])
-  model.fit(train_ds,
-            validation_data=val_ds,
-            epochs=5)
-  _, accuracy = model.evaluate(val_ds)
-  return accuracy
+  model.fit(X_train, y_train,
+            validation_data=(X_val, y_val),
+            epochs=5) #1000
+  _, performance = model.evaluate(val_ds)
+  return performance
 
 # Log an hparams summary
 def run(run_dir, hparams):
