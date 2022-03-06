@@ -16,8 +16,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 
 # Function to create the model
-def get_mlp_model(hiddenLayerOne = 5, hiddenLayerTwo = 5,
-	dropout = 0, learnRate = 0.01):
+def get_mlp_model(hiddenLayerOne, hiddenLayerTwo, learnRate):
 	# initialize a sequential model
 	# input data
 	model = Sequential()
@@ -78,7 +77,7 @@ Metrics:
 https://scikit-learn.org/stable/modules/model_evaluation.html#scoring-parameter
 '''
 print("[INFO] performing random search...")
-searcher = RandomizedSearchCV(estimator=model, n_jobs=1, cv=3,
+searcher = RandomizedSearchCV(estimator=model, n_jobs=-1, cv=3,
 	param_distributions=grid, scoring="neg_mean_squared_error", verbose = 20)
 searchResults = searcher.fit(X_train, y_train)
 
