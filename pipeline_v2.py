@@ -38,7 +38,7 @@ def get_mlp_model(hiddenLayerOne = 5, hiddenLayerTwo = 5,
 os.chdir('/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/')
 
 # load dataset
-data = pd.read_csv('example.csv', index_col = 1)
+data = pd.read_csv('example.csv', index_col = 0)
 
 # Train/test split
 X = data.drop('target', axis = 1)
