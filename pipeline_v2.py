@@ -52,7 +52,7 @@ print(len(X_test), 'test examples')
 
 # wrap our model into a scikit-learn compatible classifier
 print("[INFO] initializing model...")
-model = KerasClassifier(build_fn=get_mlp_model, verbose=0)
+model = KerasRegressor(build_fn=get_mlp_model, verbose=0)
 
 # define a grid of the hyperparameter search space
 hiddenLayerOne = [16, 4]
