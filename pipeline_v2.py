@@ -23,7 +23,6 @@ def get_mlp_model(hiddenLayerOne = 5, hiddenLayerTwo = 5,
 	model = Sequential()
 	model.add(Dense(10, activation="relu", input_dim=10))
 	model.add(Dense(hiddenLayerOne, activation="relu"))
-	model.add(Dropout(dropout))
 	model.add(Dense(hiddenLayerTwo, activation="relu"))
 	model.add(Dense(1))
 	# compile the model
@@ -45,15 +44,12 @@ data = pd.read_csv('example.csv', index_col = 1)
 X = data.drop('target', axis = 1)
 y = data.target
 
+X = np.asarray(X).astype(np.float32)
+y =  np.asarray(y).astype(np.float32
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 print(len(X_train), 'train examples')
 print(len(X_test), 'test examples')
-
-X_train = X_train.to_numpy()
-y_train = y_train.to_numpy()
-X_test = X_test.to_numpy()
-y_test = y_test.to_numpy()
-
 
 # wrap our model into a scikit-learn compatible classifier
 print("[INFO] initializing model...")
@@ -63,7 +59,6 @@ model = KerasClassifier(build_fn=get_mlp_model, verbose=0)
 hiddenLayerOne = [16, 4]
 hiddenLayerTwo = [4, 3]
 learnRate = [1e-2, 1e-1]
-dropout = [0.3, 0.1]
 batchSize = [16, 10]
 epochs = [5, 6]
 
@@ -72,7 +67,6 @@ grid = dict(
 	hiddenLayerOne=hiddenLayerOne,
 	learnRate=learnRate,
 	hiddenLayerTwo=hiddenLayerTwo,
-	dropout=dropout,
 	batch_size=batchSize,
 	epochs=epochs
 )
