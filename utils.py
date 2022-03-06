@@ -1,3 +1,8 @@
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dropout
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.optimizers import Adam
+
 def get_mlp_model(columns, hiddenLayerOne, hiddenLayerTwo,
 	dropout, learnRate):
 	# initialize a sequential model
