@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+
 from sklearn.model_selection import train_test_split
 
 # import the necessary packages
@@ -14,18 +15,16 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import RandomizedSearchCV
 
 # Function to create the model
-def get_mlp_model(columns, hiddenLayerOne, hiddenLayerTwo,
+def get_mlp_model(hiddenLayerOne, hiddenLayerTwo,
 	dropout, learnRate):
 	# initialize a sequential model
 	# input data
 	model = Sequential()
-
-	model.add(Dense(columns, activation="relu", input_dim=columns))
+	model.add(Dense(10, activation="relu", input_dim=10))
 	model.add(Dense(hiddenLayerOne, activation="relu"))
 	model.add(Dropout(dropout))
 	model.add(Dense(hiddenLayerTwo, activation="relu"))
 	model.add(Dense(1))
-
 	# compile the model
 	model.compile(
 		optimizer=Adam(learning_rate=learnRate),
@@ -63,7 +62,6 @@ epochs = [5]
 
 # create a dictionary from the hyperparameter grid
 grid = dict(
-	columns = [len(X_train.columns)],
 	hiddenLayerOne=hiddenLayerOne,
 	learnRate=learnRate,
 	hiddenLayerTwo=hiddenLayerTwo,
