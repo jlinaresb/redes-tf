@@ -1,7 +1,7 @@
 #!/bin/bash
 
-files=`ls /mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/*.csv`
-for i in $files
+for i in `ls /mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/*.csv`
 do
-	echo -f $i
+	echo now is $i
+	cat $i
 done
