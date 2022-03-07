@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import numpy as np
+import json
+import argparse
 
 from sklearn.model_selection import train_test_split
 
@@ -33,11 +35,26 @@ def get_mlp_model(hiddenLayerOne, hiddenLayerTwo, learnRate):
 	return model
 
 
+# Arguments
+inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
+outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
+#filename = 'example.csv'
+outfile = filename.replace('.csv', '')
+
+# Argument parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("-f","--filename", help="Filename of input data",
+                    type=str, required=True)
+args = parser.parse_args()
+filename = args.filename
+
+
+
 # working directory to input data
-os.chdir('/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/')
+os.chdir(inputDir)
 
 # load dataset
-data = pd.read_csv('example.csv', index_col = 0)
+data = pd.read_csv(filename, index_col = 0)
 
 # Train/test split
 X = data.drop('target', axis = 1)
@@ -92,4 +109,21 @@ print("[INFO] best score is {:.2f} using {}".format(bestScore,
 print("[INFO] evaluating the best model...")
 bestModel = searchResults.best_estimator_
 performance = bestModel.score(X_test, y_test)
-print("Mean squared error: {:.2f}%".format(performance))
+print("Mean squared error: {:.2f}".format(performance))
+
+
+# Save results
+if not os.path.exists(outDir + outfile):
+    os.makedirs(outDir + outfile)
+
+# serialize model to JSON
+model_json = bestModel.model.to_json()
+with open(outDir + outfile + "/model.json", "w") as json_file:
+    json_file.write(model_json)
+
+# serialize weights to HDF5
+bestModel.model.save(outDir + outfile + "/model.h5")
+print("Saved model to disk")
+
+os.makedirs(outDir + outfile + '/test')
+np.savez(outDir + outfile + 'test' + '/test.npz', X_test=X_test, y_test=y_test)
