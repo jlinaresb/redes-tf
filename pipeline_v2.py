@@ -38,14 +38,15 @@ def get_mlp_model(hiddenLayerOne, hiddenLayerTwo, learnRate):
 # Arguments
 inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
 outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
-#filename = 'example.csv'
 
 # Argument parsing
 parser = argparse.ArgumentParser()
-parser.add_argument("-f","--path", help="Path to input data",
-                    type=str, required=True)
+parser.add_argument("-f","--filename", help="Filename of input data",
+                    type=int, required=True)
 args = parser.parse_args()
 filename = args.filename
+files = os.listdir(inputDir)
+filename = files[filename]
 outfile = filename.replace('.csv', '')
 
 
