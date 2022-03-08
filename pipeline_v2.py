@@ -19,7 +19,7 @@ from sklearn.model_selection import RandomizedSearchCV
 
 
 # Function to create the model
-def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, learnRate):
+def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, dropout, learnRate):
 	# initialize a sequential model
 	# input data
 	model = Sequential()
