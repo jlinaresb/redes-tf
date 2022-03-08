@@ -18,25 +18,12 @@ from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import RandomizedSearchCV
 
 
-# Directories
-inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
-outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
-
-# Argument parsing
-parser = argparse.ArgumentParser()
-parser.add_argument("-f","--filename", help="Filename of input data",
-                    type=int, required=True)
-args = parser.parse_args()
-filename = args.filename - 1
-files = os.listdir(inputDir)
-
-
 # Function to create the model
-def get_mlp_model(hiddenLayerOne, hiddenLayerTwo, learnRate):
+def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, learnRate):
 	# initialize a sequential model
 	# input data
 	model = Sequential()
-	model.add(Dense(10, activation="relu", input_dim=10))
+	model.add(Dense(firstLayer, activation="relu", input_dim=10))
 	model.add(Dense(hiddenLayerOne, activation="relu"))
 	model.add(Dense(hiddenLayerTwo, activation="relu"))
 	model.add(Dense(1))
@@ -49,9 +36,19 @@ def get_mlp_model(hiddenLayerOne, hiddenLayerTwo, learnRate):
 	return model
 
 
+# Directories
+inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
+outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
+
+# Argument parsing
+parser = argparse.ArgumentParser()
+parser.add_argument("-f","--filename", help="Filename of input data",
+                    type=int, required=True)
+args = parser.parse_args()
+filename = args.filename - 1
+files = os.listdir(inputDir)
 filename = files[filename]
 outfile = filename.replace('.csv', '')
-
 
 # working directory to input data
 os.chdir(inputDir)
@@ -61,6 +58,7 @@ data = pd.read_csv(filename, index_col = 0)
 
 # Train/test split
 X = data.drop('target', axis = 1)
+nInputlayer = len(X.columns)
 y = data.target
 
 X = np.asarray(X).astype(np.float32)
@@ -83,6 +81,7 @@ epochs = [5, 6]
 
 # create a dictionary from the hyperparameter grid
 grid = dict(
+	firstLayer=nInputlayer,
 	hiddenLayerOne=hiddenLayerOne,
 	learnRate=learnRate,
 	hiddenLayerTwo=hiddenLayerTwo,
