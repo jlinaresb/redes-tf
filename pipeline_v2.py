@@ -84,7 +84,7 @@ epochs = [20, 40, 80, 160]
 
 # create a dictionary from the hyperparameter grid
 grid = dict(
-	firstLayer=nInputlayer,
+	firstLayer=[nInputlayer],
 	hiddenLayerOne=hiddenLayerOne,
 	learnRate=learnRate,
 	hiddenLayerTwo=hiddenLayerTwo,
