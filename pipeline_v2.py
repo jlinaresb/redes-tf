@@ -18,6 +18,10 @@ from tensorflow.keras.wrappers.scikit_learn import KerasRegressor
 from sklearn.model_selection import RandomizedSearchCV
 
 
+# Directories
+inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
+outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
+
 # Argument parsing
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--filename", help="Filename of input data",
@@ -43,12 +47,6 @@ def get_mlp_model(hiddenLayerOne, hiddenLayerTwo, learnRate):
 		metrics=['RootMeanSquaredError','mse', 'mae', 'mape', 'cosine_proximity'])
 	# return compiled model
 	return model
-
-
-# Arguments
-inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
-outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
-
 
 
 filename = files[filename]
