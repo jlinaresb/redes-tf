@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#SBATCH -p cola-corta
+#SBATCH -p shared
 #SBATCH -c 16
-#SBATCH --qos default
+#SBATCH --qos shared_short
 #SBATCH --mem 8GB
 #SBATCH -t 01:00:00
 

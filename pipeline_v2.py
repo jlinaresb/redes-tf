@@ -25,7 +25,9 @@ def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, learnRate):
 	model = Sequential()
 	model.add(Dense(firstLayer, activation="relu", input_dim=10))
 	model.add(Dense(hiddenLayerOne, activation="relu"))
+	model.add(Dropout(dropout))
 	model.add(Dense(hiddenLayerTwo, activation="relu"))
+	model.add(Dropout(dropout))
 	model.add(Dense(1))
 	# compile the model
 	model.compile(
@@ -73,11 +75,12 @@ print("[INFO] initializing model...")
 model = KerasRegressor(build_fn=get_mlp_model, verbose=0)
 
 # define a grid of the hyperparameter search space
-hiddenLayerOne = [16, 4]
-hiddenLayerTwo = [4, 3]
-learnRate = [1e-2, 1e-1]
-batchSize = [16, 10]
-epochs = [5, 6]
+hiddenLayerOne = [32, 16, 8, 4]
+hiddenLayerTwo = [5, 4, 3, 2]
+learnRate = [1e-2, 1e-3, 1e-4]
+dropout = [0.3, 0.4, 0.5]
+batchSize = [4, 8, 16, 32]
+epochs = [20, 40, 80, 160]
 
 # create a dictionary from the hyperparameter grid
 grid = dict(
@@ -85,6 +88,7 @@ grid = dict(
 	hiddenLayerOne=hiddenLayerOne,
 	learnRate=learnRate,
 	hiddenLayerTwo=hiddenLayerTwo,
+	dropout=dropout,
 	batch_size=batchSize,
 	epochs=epochs
 )
