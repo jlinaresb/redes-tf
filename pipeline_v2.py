@@ -57,8 +57,8 @@ outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
 #os.chdir(inputDir)
 
 # load datasets (train/test)
-train = pd.read_csv(inputDir + 'data_rituximab_train', index_col = 0)
-test = pd.read_csv(inputDir + 'data_rituximab_test', index_col = 0)
+train = pd.read_csv(inputDir + 'data_rituximab_train.csv', index_col = 0)
+test = pd.read_csv(inputDir + 'data_rituximab_test.csv', index_col = 0)
 
 X_train = train.drop('target', axis = 1)
 y_train = test.target
