@@ -14,8 +14,7 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
-from tensorflow.keras.utils import np_utils
-from tensorflow.keras.utils.np_utils import to_categorical
+
 
 
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
