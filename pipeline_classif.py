@@ -120,8 +120,7 @@ searchResults = searcher.fit(X_train, y_train)
 # summarize grid search information
 bestScore = searchResults.best_score_
 bestParams = searchResults.best_params_
-print("[INFO] best score is {:.2f} using {}".format(bestScore,
-	bestParams))
+print("[INFO] best score is {:.2f} using {}".format(bestScore, bestParams))
 
 # extract the best model, make predictions on our data, and show a
 # model report
