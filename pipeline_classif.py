@@ -114,7 +114,7 @@ https://scikit-learn.org/stable/modules/model_evaluation.html#scoring-parameter
 '''
 print("[INFO] performing random search...")
 searcher = GridSearchCV(estimator=model, n_jobs=-1, cv=3,
-	param_distributions=grid, scoring="accuracy", verbose = 20)
+	param_grid=grid, scoring="accuracy", verbose = 20)
 searchResults = searcher.fit(X_train, y_train)
 
 # summarize grid search information
