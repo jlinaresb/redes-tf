@@ -61,7 +61,7 @@ train = pd.read_csv(inputDir + 'data_rituximab_train.csv', index_col = 0)
 test = pd.read_csv(inputDir + 'data_rituximab_test.csv', index_col = 0)
 
 X_train = train.drop('target', axis = 1)
-y_train = test.target
+y_train = train.target
 
 X_test = test.drop('target', axis = 1)
 y_test = test.target
