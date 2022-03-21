@@ -5,6 +5,7 @@ import json
 import argparse
 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import LabelEncoder
 
 # import the necessary packages
 import tensorflow as tf
@@ -13,6 +14,9 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dropout
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.utils import np_utils
+from tensorflow.keras.utils.np_utils import to_categorical
+
 
 from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
@@ -33,7 +37,7 @@ def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, dropout, learnRate
 	# compile the model
 	model.compile(
 		optimizer=Adam(learning_rate=learnRate),
-		loss="sparse_categorical_crossentropy",
+		loss="categorical_crossentropy",
 		metrics=['accuracy'])
 	# return compiled model
 	return model
@@ -55,11 +59,11 @@ test['target'].replace(['non_responder', 'moderate_responder', 'responder'], [0,
 
 X_train = train.drop('target', axis = 1)
 y_train = train.target
-y_train = np.asarray(y_train).astype(np.float32)
+y_train = tf.keras.utils.to_categorical(y_train, num_classes=None, dtype = 'float32')
 
 X_test = test.drop('target', axis = 1)
 y_test = test.target
-y_test = np.asarray(y_test).astype(np.float32)
+y_test = tf.keras.utils.to_categorical(y_train, num_classes=None, dtype = 'float32')
 
 
 # Train/test split
