@@ -18,6 +18,7 @@ from tensorflow.keras.wrappers.scikit_learn import KerasClassifier
 from sklearn.model_selection import GridSearchCV
 
 
+
 # Function to create the model
 def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, dropout, learnRate):
 	# initialize a sequential model
@@ -42,44 +43,30 @@ def get_mlp_model(firstLayer, hiddenLayerOne, hiddenLayerTwo, dropout, learnRate
 inputDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/data/'
 outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
 
-# Argument parsing
-#parser = argparse.ArgumentParser()
-#parser.add_argument("-f","--filename", help="Filename of input data",
-#                    type=int, required=True)
-#args = parser.parse_args()
-#filename = args.filename - 1
-
-#files = os.listdir(inputDir)
-#filename = files[filename]
 outfile = 'rituximab'
-
-# working directory to input data
-#os.chdir(inputDir)
 
 # load datasets (train/test)
 train = pd.read_csv(inputDir + 'data_rituximab_train.csv', index_col = 0)
 test = pd.read_csv(inputDir + 'data_rituximab_test.csv', index_col = 0)
 
+# convert variable response to int
+train['target'].replace(['non_responder', 'moderate_responder', 'responder'], [0, 1, 2], inplace=True)
+test['target'].replace(['non_responder', 'moderate_responder', 'responder'], [0, 1, 2], inplace=True)
+
 X_train = train.drop('target', axis = 1)
 y_train = train.target
+y_train = np.asarray(y_train).astype(np.float32)
 
 X_test = test.drop('target', axis = 1)
 y_test = test.target
+y_test = np.asarray(y_test).astype(np.float32)
 
 
 # Train/test split
-#X = data.drop('target', axis = 1)
 nInputlayer = len(X_train.columns)
-#y = data.target
-
 X_train = np.asarray(X_train).astype(np.float32)
-#y_train =  np.asarray(y_train).astype(np.float32)
-
 X_test = np.asarray(X_test).astype(np.float32)
-#y_test =  np.asarray(y_test).astype(np.float32)
 
-
-#X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
 print(len(X_train), 'train examples')
 print(len(X_test), 'test examples')
 
