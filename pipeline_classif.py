@@ -51,7 +51,7 @@ outDir = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/redes-tf/models/'
 
 #files = os.listdir(inputDir)
 #filename = files[filename]
-#outfile = filename.replace('.csv', '')
+outfile = 'rituximab'
 
 # working directory to input data
 #os.chdir(inputDir)
@@ -127,8 +127,8 @@ print("[INFO] best score is {:.2f} using {}".format(bestScore,
 # model report
 print("[INFO] evaluating the best model...")
 bestModel = searchResults.best_estimator_
-performance = bestModel.score(X_test, y_test)
-print("Accuracy {:.2f}".format(performance))
+accuracy = bestModel.score(X_test, y_test)
+print("accuracy: {:.2f}%".format(accuracy * 100))
 
 
 # Save results
