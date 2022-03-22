@@ -53,20 +53,21 @@ train = pd.read_csv(inputDir + 'data_rituximab_train.csv', index_col = 0)
 test = pd.read_csv(inputDir + 'data_rituximab_test.csv', index_col = 0)
 
 # convert variable response to int
-train['target'].replace(['non_responder', 'moderate_responder', 'responder'], [0, 1, 2], inplace=True)
-test['target'].replace(['non_responder', 'moderate_responder', 'responder'], [0, 1, 2], inplace=True)
+X_train = train.drop(['target'], axis = 1)
+X_train = np.array(X_train)
+y_train = train['target']
+y_train = y_train.astype('category')
 
-X_train = train.drop('target', axis = 1)
-y_train = train.target
-y_train = tf.keras.utils.to_categorical(y_train, num_classes=None, dtype = 'float32')
 
-X_test = test.drop('target', axis = 1)
-y_test = test.target
-y_test = tf.keras.utils.to_categorical(y_train, num_classes=None, dtype = 'float32')
+X_test = test.drop(['target'], axis = 1)
+X_test = np.array(X_test)
+y_test = test['target']
+y_test = test['target']
+y_test = y_test.astype('category')
 
 
 # Train/test split
-nInputlayer = len(X_train.columns)
+nInputlayer = X_train.shape[1]
 X_train = np.asarray(X_train).astype(np.float32)
 X_test = np.asarray(X_test).astype(np.float32)
 
@@ -104,7 +105,7 @@ https://scikit-learn.org/stable/modules/model_evaluation.html#scoring-parameter
 '''
 print("[INFO] performing random search...")
 searcher = GridSearchCV(estimator=model, n_jobs=-1, cv=3,
-	param_grid=grid, scoring="accuracy", verbose = 20)
+	param_grid=grid, scoring="neg_log_loss", verbose = 20)
 searchResults = searcher.fit(X_train, y_train)
 
 # summarize grid search information
