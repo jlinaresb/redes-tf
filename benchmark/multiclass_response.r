@@ -29,6 +29,15 @@ svm.m = mlr::getBMRModels(svm)
 best.svm = svm.m[[1]][[1]][[which.max(svm.df$acc)]]
 
 
+
+# Test
+test = read.csv('../../data/test.csv')
+test = mlr::makeClassifTask(data = test, target = 'target')
+predict(best.glmnet, test)$data
+predict(best.rf, test)$data
+predict(best.svm, test)$data
+
+
 # Validation
 validation = read.csv('../../data/validation.csv')
 validation = mlr::makeClassifTask(data = validation, target = 'target')
