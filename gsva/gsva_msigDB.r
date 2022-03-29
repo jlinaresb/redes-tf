@@ -30,7 +30,7 @@ load('~/projects/redes-tf/data/signatures/C7_toRun.RData')
 
 # Run GSVA!
 # ===
-methods = 'GSVA'
+methods = 'gsva'
 gsva = gsva(expr = data,
             gset.idx.list = c7,
             method = methods,
