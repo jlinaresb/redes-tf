@@ -1,6 +1,6 @@
 # Run Cibersort
 # ===
-hpc = 'local' #local cesga
+hpc = 'cesga' #local cesga
 
 if (hpc == 'cesga') {
   cbsrt = '/home/ulc/co/jlb/git/bulk-deconv/cibersort.r'

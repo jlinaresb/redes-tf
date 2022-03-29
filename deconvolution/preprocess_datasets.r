@@ -1,15 +1,9 @@
 # Deconvolution
-
+load('~/projects/redes-tf/data/expression/expression_Raul.RData')
 
 # In train
 # ===
-train = read.csv('~/projects/redes-tf/data/train.csv')
-test = read.csv('~/projects/redes-tf/data/test.csv')
-train = rbind.data.frame(train, test)
-rm(test)
-
-train = subset(train, select = -c(target))
-train = t(train)
+train = exp.DAT1
 train = cbind.data.frame(gene = rownames(train), train)
 rownames(train) = 1:nrow(train)
 
@@ -18,9 +12,7 @@ write.table(train, file = '~/projects/redes-tf/deconvolution/train_deconvolution
 
 # In validation
 # ===
-validation = read.csv('~/projects/redes-tf/data/validation.csv')
-validation = subset(validation, select = -c(target))
-validation = t(validation)
+validation = exp.DAT2
 validation = cbind.data.frame(gene = rownames(validation), validation)
 rownames(validation) = 1:nrow(validation)
 
