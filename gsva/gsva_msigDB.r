@@ -26,18 +26,18 @@ require(corrplot)
 # 
 # save(c7, data, file = '~/projects/redes-tf/data/signatures/C7_toRun.RData')
 
-load('~/projects/redes-tf/data/signatures/C7_toRun.RData')
+load('~/projects/redes-tf/data/signatures/C2_toRun.RData')
 
 # Run GSVA!
 # ===
-methods = 'gsva'
+methods = 'ssgsea'
 gsva = gsva(expr = data,
-            gset.idx.list = c7,
+            gset.idx.list = c2,
             method = methods,
             kcdf = 'Gaussian')
 gsva = as.data.frame(t(gsva))
 
-saveRDS(gsva, file = '~/projects/redes-tf/results/gsva/msigDB_c7_gsva.rds')
+saveRDS(gsva, file = '~/projects/redes-tf/results/gsva/msigDB_c2_ssgsea.rds')
 
 # Corrplot
 # ===

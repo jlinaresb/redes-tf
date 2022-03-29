@@ -8,7 +8,6 @@ load('~/projects/redes-tf/data/methylation/methylation_jose.RData')
 PREC.res$scaled = as.factor(PREC.res$scaled)
 meta = data.frame(
   expla = PREC.res$scaled,
-  id = rownames(PREC.res),
   row.names = rownames(PREC.res)
 )
 
@@ -29,9 +28,9 @@ res = mCSEATest(rank,
 head(res[["promoters"]][,-7])
 
 mCSEAPlot(res, regionType = 'promoters',
-          dmrName = 'ZAP70',
+          dmrName = 'LTA',
           transcriptAnnotation = 'symbol',
           makePDF = F)
 
 
-mCSEAPlotGSEA(rank, res, regionType = "promoters", dmrName = "ZAP70")
+mCSEAPlotGSEA(rank, res, regionType = "promoters", dmrName = "LTA")
