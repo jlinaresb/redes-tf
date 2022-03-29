@@ -15,7 +15,7 @@ myannotation <- cpg.annotate(datatype = "array",
                              coef = 2,
                              fdr = 0.1)
 
-dmrcoutput = dmrcate(myannotation, lambda = 1000, C = 2)
+dmrcoutput = dmrcate(myannotation, lambda = 100, C = 2)
 
 
 # Extract ranges
