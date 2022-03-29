@@ -1,6 +1,16 @@
 # Run Cibersort
 # ===
-source('/home/ulc/co/jlb/git/bulk-deconv/cibersort.r')
+hpc = 'local' #local cesga
+
+if (hpc == 'cesga') {
+  cbsrt = '/home/ulc/co/jlb/git/bulk-deconv/cibersort.r'
+  lmd22.path = '/mnt/netapp2/Store_uni/home/ulc/co/jlb/bulk-deConv/data/LM22.txt'
+} else if (hpc == 'local'){
+  cbsrt = '~/git/bulk-deConv/cibersort.r'
+  lmd22.path = '~/projects/bulk-deConv/data/signatures/LM22.txt'
+}
+
+source(cbsrt)
 
 # Arguments
 # ===
@@ -8,7 +18,7 @@ setwd('~/projects/redes-tf/deconvolution/')
 outDir = '~/projects/redes-tf/deconvolution/results/'
 nperm = 1000
 # signature for blood cells
-lmd22 = read.table('/mnt/netapp2/Store_uni/home/ulc/co/jlb/bulk-deConv/data/LM22.txt', sep = '\t', header = T, row.names = 1)
+lmd22 = read.table(lmd22.path, sep = '\t', header = T, row.names = 1)
 # bulk data (mixture)
 
 bulk.files = list.files(pattern = 'tsv')

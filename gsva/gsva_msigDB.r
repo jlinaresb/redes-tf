@@ -43,9 +43,11 @@ cor = cor(gsva)
 cor = cor[,which(colnames(cor) == 'FCBF')]
 dim(cor)
 
-xx = data.frame(
+res = data.frame(
   FCBF = cor,
   row.names = names(cor)
 )
+
+saveRDS(res, file = '~/projects/redes-tf/results/gsva/msigDB_c2_gsva.rds')
 # plot = corrplot(cor(gsva), type = 'lower', order = 'hclust')
 
