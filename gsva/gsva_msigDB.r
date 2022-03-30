@@ -3,6 +3,7 @@
 require(GSVA)
 require(qusage)
 require(corrplot)
+
 # 
 # # Load expression data
 # # ===
@@ -10,6 +11,14 @@ require(corrplot)
 # setwd(inDir)
 # load('expression_Raul.RData')
 # data = as.matrix(exp.PREC)
+# require(tmod)
+# data("tmod")
+# list = tmod$MODULES2GENES
+# names(list) = tmod$MODULES$Title
+# signature = colnames(read.csv('~/projects/redes-tf/data/train.csv'))[-1]
+# list$FCBF = signature
+# tmod = list
+# save(tmod, data, file = '~/projects/redes-tf/data/signatures/tmod_toRun.RData')
 # 
 # # Import signature
 # # ===
@@ -26,18 +35,30 @@ require(corrplot)
 # 
 # save(c7, data, file = '~/projects/redes-tf/data/signatures/C7_toRun.RData')
 
-load('~/projects/redes-tf/data/signatures/C2_toRun.RData')
+load('~/projects/redes-tf/data/signatures/tmod_toRun.RData')
 
 # Run GSVA!
 # ===
-methods = 'ssgsea'
+# GSVA
+methods = 'gsva'
 gsva = gsva(expr = data,
-            gset.idx.list = c2,
+            gset.idx.list = tmod,
             method = methods,
             kcdf = 'Gaussian')
 gsva = as.data.frame(t(gsva))
 
-saveRDS(gsva, file = '~/projects/redes-tf/results/gsva/msigDB_c2_ssgsea.rds')
+saveRDS(gsva, file = '~/projects/redes-tf/results/gsva/msigDB_tmod_gsva.rds')
+
+
+# SSGSEA
+methods = 'ssgsea'
+ssgsea = gsva(expr = data,
+            gset.idx.list = tmod,
+            method = methods,
+            kcdf = 'Gaussian')
+ssgsea = as.data.frame(t(ssgsea))
+
+saveRDS(ssgsea, file = '~/projects/redes-tf/results/gsva/msigDB_tmod_ssgsea.rds')
 
 # Corrplot
 # ===
