@@ -76,7 +76,7 @@ ggplot2::ggsave(filename = 'volcano.tiff',
        dpi = 300)
 
 
-# mCSEAPlot(res, regionType = 'promoters',
+c# mCSEAPlot(res, regionType = 'promoters',
 #           dmrName = 'LTA',
 #           transcriptAnnotation = 'symbol',
 #           makePDF = F)

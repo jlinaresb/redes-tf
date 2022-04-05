@@ -32,6 +32,7 @@ require(data.table)
 res = as.data.frame(rbindlist(res))
 rownames(res) = 1:nrow(res)
 
+require(tmod)
 data("tmod")
 
 modules = tmod$MODULES
